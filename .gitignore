@@ -1,6 +1,6 @@
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
 
-*.iml
+#*.iml
 
 # User-specific stuff:
 .idea/workspace.xml

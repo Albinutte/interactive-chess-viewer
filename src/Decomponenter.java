@@ -34,9 +34,9 @@ public class Decomponenter {
     }
 
     private void dfs(int row, int col, int from_class) {
-        if (row + 1 < rows)
+        /*if (row + 1 < rows)
             if (m.get(row + 1, col)[0] == 0) {
                 classes
-            }
+            }*/
     }
 }
