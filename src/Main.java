@@ -21,6 +21,7 @@ public class Main
         try {
             //opening output file
             writer = new PrintWriter("out.txt", "UTF-8");
+            IdentifyPieces identifier = new IdentifyPieces();
 
             //reading image
             Mat m = Highgui.imread("chuzhakinsystem2-07-page-001.jpg",
@@ -48,9 +49,9 @@ public class Main
                         bin.put(i, j, 255);
                     else
                         bin.put(i, j, 0);
-            showMat(bin);
+            //showMat(bin);
 
-            
+
         } catch (IOException ex) {
             System.out.println("Didn't open file");
         }
