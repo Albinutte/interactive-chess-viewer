@@ -1,3 +1,5 @@
+package main.java;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -22,7 +24,7 @@ public class Main
         try {
             //opening output file
             writer = new PrintWriter("out.txt", "UTF-8");
-            //IdentifyPieces identifier = new IdentifyPieces();
+            //main.java.IdentifyPieces identifier = new main.java.IdentifyPieces();
 
             //reading image
             Mat m = Highgui.imread("chuzhakinsystem2-07-page-001.jpg",
@@ -46,8 +48,7 @@ public class Main
         finally {
             try {
                 writer.close();
-            } catch (Exception ex)
-            {
+            } catch (java.lang.NullPointerException ex) {
                 System.out.println("Unable to close");
             }
         }
@@ -63,7 +64,7 @@ public class Main
         MatOfByte matOfByte = new MatOfByte();
         Highgui.imencode(".jpg", img, matOfByte);
         byte[] byteArray = matOfByte.toArray();
-        BufferedImage bufImage = null;
+        BufferedImage bufImage;
         try {
             InputStream in = new ByteArrayInputStream(byteArray);
             bufImage = ImageIO.read(in);
@@ -71,14 +72,9 @@ public class Main
             frame.getContentPane().add(new JLabel(new ImageIcon(bufImage)));
             frame.pack();
             frame.setVisible(true);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private static Mat boxing(Mat img) {
-        Mat res = img.clone();
-        return res;
     }
 }

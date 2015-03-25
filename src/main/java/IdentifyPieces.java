@@ -1,3 +1,5 @@
+package main.java;
+
 import org.opencv.core.*;
 import org.opencv.highgui.*;
 import java.util.List;
@@ -11,7 +13,7 @@ public class IdentifyPieces {
     private static List<Mat> piecesImages;
     private static List<Character> piecesTypes;
 
-    public IdentifyPieces() {
+    public main.java.IdentifyPieces() {
         piecesImages = new ArrayList<Mat>();
         piecesTypes = new ArrayList<Character>();
         loadLearningSamples();

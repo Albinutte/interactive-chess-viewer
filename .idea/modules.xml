@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/hellocv.iml" filepath="$PROJECT_DIR$/hellocv.iml" />
+      <module fileurl="file://$PROJECT_DIR$/target/maven.iml" filepath="$PROJECT_DIR$/target/maven.iml" />
     </modules>
   </component>
 </project>
