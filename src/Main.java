@@ -16,7 +16,6 @@ public class Main
     public static void main( String[] args )
     {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        IdentifyPieces identifier = new IdentifyPieces();
 
         PrintWriter writer = null;
         try {
@@ -49,8 +48,9 @@ public class Main
                         bin.put(i, j, 255);
                     else
                         bin.put(i, j, 0);
-            //showMat(bin);
+            showMat(bin);
 
+            
         } catch (IOException ex) {
             System.out.println("Didn't open file");
         }
