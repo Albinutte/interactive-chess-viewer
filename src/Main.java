@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -21,25 +22,12 @@ public class Main
         try {
             //opening output file
             writer = new PrintWriter("out.txt", "UTF-8");
-            IdentifyPieces identifier = new IdentifyPieces();
+            //IdentifyPieces identifier = new IdentifyPieces();
 
             //reading image
             Mat m = Highgui.imread("chuzhakinsystem2-07-page-001.jpg",
                     Highgui.CV_LOAD_IMAGE_GRAYSCALE);
             System.out.println(m.size());
-
-            /*
-            //printing stuff into file
-            for (int i = 0; i < m.rows(); i++) {
-                for (int j = 0; j < m.cols(); j++) {
-                    if (m.get(i, j)[0] != 255)
-                        writer.print("+");
-                    else
-                        writer.print("o");
-                }
-                writer.println();
-            }
-            */
 
             //binarizing
             Mat bin = m.clone();
@@ -49,7 +37,7 @@ public class Main
                         bin.put(i, j, 255);
                     else
                         bin.put(i, j, 0);
-            //showMat(bin);
+            showMat(bin);
 
 
         } catch (IOException ex) {
@@ -66,7 +54,9 @@ public class Main
     }
 
     private static void showMat(Mat img) {
-        int N = 640;
+        //getting screen resolution to set optimal img dimensions
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int N = (int) (screenSize.getWidth() / 3);
         int rows = img.rows();
         int cols = img.cols();
         Imgproc.resize(img, img, new Size(N, N * rows / cols));

@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Created by malinovsky239 on 25.03.2015.
  */
 public class IdentifyPieces {
-
+/*
     private static List<Mat> piecesImages;
     private static List<Character> piecesTypes;
 
@@ -49,5 +49,5 @@ public class IdentifyPieces {
 
     private void learn() {
 
-    }
+    }*/
 }
