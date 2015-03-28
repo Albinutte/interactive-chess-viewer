@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 import org.opencv.core.*;
+import org.opencv.core.Point;
 import org.opencv.highgui.*;
 import org.opencv.imgproc.Imgproc;
 
@@ -27,19 +28,48 @@ public class Main
             //main.java.IdentifyPieces identifier = new main.java.IdentifyPieces();
 
             //reading image
-            Mat m = Highgui.imread("chuzhakinsystem2-07-page-001.jpg",
+            Mat m = Highgui.imread("chessDiagramSamples/2.png",
                     Highgui.CV_LOAD_IMAGE_GRAYSCALE);
             System.out.println(m.size());
+            showMat(m);
 
             //binarizing
-            Mat bin = m.clone();
-            for (int i = 0; i < bin.rows(); i++)
-                for (int j = 0; j < bin.cols(); j++)
-                    if (bin.get(i, j)[0] > 128)
-                        bin.put(i, j, 255);
-                    else
-                        bin.put(i, j, 0);
+            Mat bin = new Mat();
+            Imgproc.threshold(m, bin, 170, 255, Imgproc.THRESH_BINARY);
             showMat(bin);
+
+            //finding edges
+            Mat edges = new Mat();
+            Imgproc.Canny(bin, edges, 80, 120);
+            showMat(edges);
+
+            /*
+            TODO:
+            loop over rows,
+            get all black parts,
+            sort by left edge,
+            look at the right edge,
+            cut,
+            get over cells
+             */
+
+
+            /*
+            //finding corners
+            Mat corners = new Mat();
+            Imgproc.cornerHarris(edges, corners, 2, 3, 0.04, Imgproc.BORDER_DEFAULT);
+            Core.normalize(corners, corners, 0, 255, Core.NORM_MINMAX, CvType.CV_8UC1, new Mat());
+            Core.convertScaleAbs(corners, corners);
+            showMat(corners);
+
+            //drawing cirsles there
+            int thresh = 100;
+            for (int i = 0; i < corners.rows(); i++)
+                for (int j = 0; j < corners.cols(); j++)
+                    if (corners.get(i, j)[0] > thresh)
+                        Core.circle(corners, new Point(j, i), 5, new Scalar(0), 2, 8, 0);
+            showMat(corners);
+            */
 
 
         } catch (IOException ex) {
