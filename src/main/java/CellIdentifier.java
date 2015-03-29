@@ -3,7 +3,6 @@ import org.opencv.imgproc.Imgproc;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Vector;
 
 
 /**
@@ -44,22 +43,28 @@ public class CellIdentifier {
         Imgproc.Canny(bin, edges, 80, 120);
 
         //scanning for lines
-        for (int i = 0; i < img.rows(); i++) {
+        for (int i = 0; i < edges.rows(); i++) {
             lines[i] = new ArrayList<Line>();
             int start = -1;
-            for (int j = 0; j < img.cols(); j++)
-                if (start >= 0)
-                    if (img.get(i, j)[0] == 255)
+            for (int j = 0; j < edges.cols(); j++)
+                if (start >= 0) {
+                    if (edges.get(i, j)[0] == 255.0) {
                         lines[i].add(new Line(new Point(i, start), j - start));
-                    else
                         start = -1;
-                else
-                    if (img.get(i, j)[0] == 0)
+                    }
+                }
+                else {
+                    if (edges.get(i, j)[0] == 0.0) {
                         start = j;
+                    }
+                }
             if (start >= 0)
-                lines[i].add(new Line(new Point(i, start), img.cols() - start));
+                lines[i].add(new Line(new Point(i, start), edges.cols() - start));
         }
 
+        for (ArrayList<Line> row : lines)
+            for (Line line : row)
+                System.out.println(line.getStart() + " " + line.getLength());
         return edges;
     }
 
