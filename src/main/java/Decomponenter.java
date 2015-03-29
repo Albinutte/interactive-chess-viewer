@@ -1,5 +1,3 @@
-package main.java;
-
 import org.opencv.core.Mat;
 
 /**

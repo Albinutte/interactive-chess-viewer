@@ -1,5 +1,3 @@
-package main.java;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -8,7 +6,6 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 import org.opencv.core.*;
-import org.opencv.core.Point;
 import org.opencv.highgui.*;
 import org.opencv.imgproc.Imgproc;
 
@@ -17,6 +14,22 @@ import javax.swing.*;
 
 public class Main
 {
+    public static void main( String[] args)
+    {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+        //reading image
+        Mat m = Highgui.imread("chessDiagramSamples/5.png",
+                Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+        showMat(m);
+
+        //finding cells
+        CellIdentifier cellIdentifier = new CellIdentifier(m);
+        Mat cells = cellIdentifier.find_cells();
+        showMat(cells);
+    }
+
+    /*
     public static void main( String[] args )
     {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -25,36 +38,17 @@ public class Main
         try {
             //opening output file
             writer = new PrintWriter("out.txt", "UTF-8");
-            //main.java.IdentifyPieces identifier = new main.java.IdentifyPieces();
 
             //reading image
-            Mat m = Highgui.imread("chessDiagramSamples/2.png",
+            Mat m = Highgui.imread("chessDiagramSamples/5.png",
                     Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-            System.out.println(m.size());
             showMat(m);
 
-            //binarizing
-            Mat bin = new Mat();
-            Imgproc.threshold(m, bin, 170, 255, Imgproc.THRESH_BINARY);
-            showMat(bin);
-
-            //finding edges
-            Mat edges = new Mat();
-            Imgproc.Canny(bin, edges, 80, 120);
-            showMat(edges);
-
-            /*
-            TODO:
-            loop over rows,
-            get all black parts,
-            sort by left edge,
-            look at the right edge,
-            cut,
-            get over cells
-             */
+            CellIdentifier cellIdentifier = new CellIdentifier(m);
+            Mat cells = cellIdentifier.find_cells();
+            showMat(cells);
 
 
-            /*
             //finding corners
             Mat corners = new Mat();
             Imgproc.cornerHarris(edges, corners, 2, 3, 0.04, Imgproc.BORDER_DEFAULT);
@@ -69,8 +63,6 @@ public class Main
                     if (corners.get(i, j)[0] > thresh)
                         Core.circle(corners, new Point(j, i), 5, new Scalar(0), 2, 8, 0);
             showMat(corners);
-            */
-
 
         } catch (IOException ex) {
             System.out.println("Didn't open file");
@@ -83,8 +75,9 @@ public class Main
             }
         }
     }
+    */
 
-    private static void showMat(Mat img) {
+    public static void showMat(Mat img) {
         //getting screen resolution to set optimal img dimensions
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int N = (int) (screenSize.getWidth() / 3);
