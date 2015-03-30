@@ -17,7 +17,7 @@ public class Main
     {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        Mat cellImg = Highgui.imread("chessCellsSamples/0.3.png", Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+        Mat cellImg = Highgui.imread("chessCellsSamples/0.49.png", Highgui.CV_LOAD_IMAGE_GRAYSCALE);
 
         Cell cell = new Cell(cellImg, true);
         cell.get_piece();
