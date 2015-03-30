@@ -35,9 +35,7 @@ public class CellIdentifier {
 
     private Mat img, edges, bin;
 
-    public CellIdentifier() {
-
-    }
+    public CellIdentifier() {    }
 
     public CellIdentifier(Mat m) {
         img = m;
@@ -52,14 +50,11 @@ public class CellIdentifier {
     }
 
     public ArrayList<Cell> find_cells() {
-        //System.out.println(img.size());
         //binarizing
         Imgproc.threshold(img, bin, 170, 255, Imgproc.THRESH_BINARY);
-        //Main.showMat(bin);
 
         //finding edges
         Imgproc.Canny(bin, edges, 80, 120);
-        //Main.showMat(edges);
 
         //finding good lines
         ArrayList<Line> horizontal_lines = find_lines(edges);
@@ -68,16 +63,15 @@ public class CellIdentifier {
         ArrayList<Line> vertical_lines = find_lines(rotated);
         Collections.sort(vertical_lines);
 
-       /* for (Line line : horizontal_lines)
-            System.out.println(line.getStart() + " " + line.getLength());*/
-
         //sorting lines
-        ArrayList<Integer> xs = cuts(edges.cols(), horizontal_lines);
-        ArrayList<Integer> ys = cuts(edges.rows(), vertical_lines);
-
-        /*System.out.println(xs.size() + " " + ys.size());
-        for (int y : ys)
-            System.out.println(y);*/
+        ArrayList<Integer> xs = new ArrayList<Integer>();
+        ArrayList<Integer> ys = new ArrayList<Integer>();
+        try {
+            xs = cuts(edges.cols(), horizontal_lines);
+            ys = cuts(edges.rows(), vertical_lines);
+        } catch (Exception e) {
+            System.out.println("Well damn");
+        }
 
         //getting cells
         int len = 8;
@@ -93,7 +87,6 @@ public class CellIdentifier {
             }
         }
 
-        //System.out.println(res.size());
         return res;
     }
 
@@ -126,8 +119,10 @@ public class CellIdentifier {
         double EPS = 0.1;
         for (ArrayList<Line> row : horizontal_lines)
             for (Line line : row)
-                if (Math.abs(line.getLength() - estimated) < estimated * EPS)
+                if (Math.abs(line.getLength() - estimated) < estimated * EPS) {
                     good_lines.add(line);
+                    good_lines.add(new Line(new Point(line.getStart().x + line.getLength(), line.getStart().y), -line.getLength()));
+                }
 
         return good_lines;
     }
@@ -142,75 +137,29 @@ public class CellIdentifier {
         return res;
     }
 
-    private ArrayList<Integer> cuts (int img_size, ArrayList<Line> lines) {
-        ArrayList<Integer> res = new ArrayList<Integer>();
-        ArrayList<Integer> len = new ArrayList<Integer>();
-
-        int x = 0, last = 0, cnt = 0, last_cnt = 0, next = 0;
-        for (Line line : lines) {
-            int cur_x = (int) line.getStart().x;
-            if (Math.abs(cur_x - last) < img_size / 8 / 4) {
-                x += cur_x;
-                cnt++;
-                last = cur_x;
-                next += cur_x + line.getLength();
-            }
-            else {
-                res.add(x / (cnt + last_cnt));
-                len.add(cnt + last_cnt);
-                last_cnt = cnt;
-                cnt = 1;
-                last = cur_x;
-                x = cur_x + next;
-                next = 0;
-            }
-        }
-        res.add(x / (cnt + last_cnt));
-        len.add(cnt + last_cnt);
-        len.add(img_size);
-        len.set(0, img_size);
-        res.add(next / cnt);
-
-        while (res.size() > 9) {
-            int min = img_size + 1, min_i = -1;
-            for (int i = 0; i < len.size(); i++)
-                if (min > len.get(i)) {
-                    min = len.get(i);
-                    min_i = i;
-                }
-            res.remove(min_i);
-            len.remove(min_i);
-        }
-
-        return res;
-    }
-/*
-    private ArrayList<Integer> cuts (int img_size, ArrayList<Line> lines) {
+    private ArrayList<Integer> cuts (int img_size, ArrayList<Line> lines) throws Exception {
         ArrayList<Integer> res = new ArrayList<Integer>();
         ArrayList<Integer> len = new ArrayList<Integer>();
         ArrayList<Integer> x = new ArrayList<Integer>();
-        ArrayList<Integer> next = new ArrayList<Integer>();
+        x.add(0);
 
-        int last = 0, last_cnt = 0;
         for (Line line : lines) {
             int cur_x = (int) line.getStart().x;
-            if (Math.abs(cur_x - last) < img_size / 8 / 4) {
+            if (cur_x - x.get(x.size() - 1) < img_size / 8 / 6) {
                 x.add(cur_x);
-                last = cur_x;
-                next.add(cur_x + line.getLength());
             }
-            else {
+            else if (!x.isEmpty()) {
                 res.add(x.get(x.size() / 2));
                 len.add(x.size());
-                last = cur_x;
-                next = 0;
+                x = new ArrayList<Integer>();
+                x.add(cur_x);
             }
         }
-        res.add(x / (cnt + last_cnt));
-        len.add(cnt + last_cnt);
-        len.add(img_size);
-        len.set(0, img_size);
-        res.add(next / cnt);
+
+        if (!x.isEmpty()) {
+            res.add(x.get(x.size() / 2));
+            len.add(x.size());
+        }
 
         while (res.size() > 9) {
             int min = img_size + 1, min_i = -1;
@@ -223,8 +172,10 @@ public class CellIdentifier {
             len.remove(min_i);
         }
 
+        if (res.size() != 9)
+            throw new Exception();
         return res;
-    }*/
+    }
 
     private void debug_lines(ArrayList<Line> horizontal_lines, ArrayList<Line> vertical_lines) {
         Mat disp = img.clone();

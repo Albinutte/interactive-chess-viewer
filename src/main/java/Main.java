@@ -16,7 +16,24 @@ public class Main
     public static void main( String[] args)
     {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        save_cells();
+        //test_cellidentifier();
+    }
 
+    private static void test_cellidentifier() {
+        //reading image
+        Mat m = Highgui.imread("chessDiagramSamples/" +
+                        "8.png",
+                Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+        showMat(m);
+
+        //finding cells
+        CellIdentifier cellIdentifier = new CellIdentifier(m);
+        ArrayList<Cell> cells = cellIdentifier.find_cells();
+        showMat(cells.get(15).getImg());
+    }
+
+    private static void save_cells() {
         CellIdentifier cellIdentifier = new CellIdentifier();
         for (int i = 0; i <= 8; i++) {
             String input_name = "chessDiagramSamples/" + i + ".png";
@@ -24,23 +41,16 @@ public class Main
             //showMat(m);
 
             cellIdentifier.refresh(m);
-            ArrayList<Cell> cells = cellIdentifier.find_cells();
+            try {
+                ArrayList<Cell> cells = cellIdentifier.find_cells();
 
-            String output_name = "chessCellsSamples/";
-            for (int j = 0; j < cells.size(); j++)
-                Highgui.imwrite(output_name + i + "." + j + ".png", cells.get(j).getImg());
+                String output_name = "chessCellsSamples/";
+                for (int j = 0; j < cells.size(); j++)
+                    Highgui.imwrite(output_name + i + "." + j + ".png", cells.get(j).getImg());
+            } catch (Exception e) {
+
+            }
         }
-    }
-
-    private void test_cellidentifier() {
-        //reading image
-        Mat m = Highgui.imread("chessDiagramSamples/0.png",
-                Highgui.CV_LOAD_IMAGE_GRAYSCALE);
-        showMat(m);
-
-        //finding cells
-        CellIdentifier cellIdentifier = new CellIdentifier(m);
-        ArrayList<Cell> cells = cellIdentifier.find_cells();
     }
 
     /*
