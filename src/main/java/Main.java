@@ -16,10 +16,16 @@ public class Main
     public static void main( String[] args)
     {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        save_cells();
-        //test_cellidentifier();
+
+        Mat cellImg = Highgui.imread("chessCellsSamples/0.3.png", Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+
+        Cell cell = new Cell(cellImg, true);
+        cell.get_piece();
     }
 
+    /**
+     * launches CellIdentifier for selected img
+     */
     private static void test_cellidentifier() {
         //reading image
         Mat m = Highgui.imread("chessDiagramSamples/" +
@@ -33,6 +39,11 @@ public class Main
         showMat(cells.get(15).getImg());
     }
 
+    /**
+     * Loops over imgs in /chessDiagramSamples,
+     * extracts cells imgs and
+     * stores them in /shessCellsSamples
+     */
     private static void save_cells() {
         CellIdentifier cellIdentifier = new CellIdentifier();
         for (int i = 0; i <= 8; i++) {
@@ -101,6 +112,10 @@ public class Main
     }
     */
 
+    /**
+     * Displays Mat img
+     * @param img image to display
+     */
     public static void showMat(Mat img) {
         //getting screen resolution to set optimal img dimensions
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
