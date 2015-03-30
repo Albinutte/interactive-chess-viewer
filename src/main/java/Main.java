@@ -1,9 +1,8 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import org.opencv.core.*;
 import org.opencv.highgui.*;
@@ -18,15 +17,30 @@ public class Main
     {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
+        CellIdentifier cellIdentifier = new CellIdentifier();
+        for (int i = 0; i <= 8; i++) {
+            String input_name = "chessDiagramSamples/" + i + ".png";
+            Mat m = Highgui.imread(input_name, Highgui.CV_LOAD_IMAGE_GRAYSCALE);
+            //showMat(m);
+
+            cellIdentifier.refresh(m);
+            ArrayList<Cell> cells = cellIdentifier.find_cells();
+
+            String output_name = "chessCellsSamples/";
+            for (int j = 0; j < cells.size(); j++)
+                Highgui.imwrite(output_name + i + "." + j + ".png", cells.get(j).getImg());
+        }
+    }
+
+    private void test_cellidentifier() {
         //reading image
-        Mat m = Highgui.imread("chessDiagramSamples/5.png",
+        Mat m = Highgui.imread("chessDiagramSamples/0.png",
                 Highgui.CV_LOAD_IMAGE_GRAYSCALE);
         showMat(m);
 
         //finding cells
         CellIdentifier cellIdentifier = new CellIdentifier(m);
-        Mat cells = cellIdentifier.find_cells();
-        showMat(cells);
+        ArrayList<Cell> cells = cellIdentifier.find_cells();
     }
 
     /*
